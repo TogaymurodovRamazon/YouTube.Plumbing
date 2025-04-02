@@ -14,7 +14,7 @@ namespace RepositoryLayer.Configuration
         public void Configure(EntityTypeBuilder<Testimonal> builder)
         {
             builder.Property(x => x.CreatedDate).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.UpdatedDate).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.UpdatedDate).HasMaxLength(10);
             builder.Property(x => x.RowVersion).IsRowVersion();
 
             builder.Property(x => x.Comment).IsRequired().HasMaxLength(2000);
@@ -26,7 +26,8 @@ namespace RepositoryLayer.Configuration
             builder.HasData(new Testimonal
             {
                 Id = 1,
-                Comment= "Lorem ipsum dolor sit amet, consectetur adipiscing elit," +
+                CreatedDate = "05/05/2025",
+                Comment = "Lorem ipsum dolor sit amet, consectetur adipiscing elit," +
                 " sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 FullName="Merlin Mariya",
                 Title="Interesting",
@@ -35,6 +36,7 @@ namespace RepositoryLayer.Configuration
             }, new Testimonal
             {
                 Id = 2,
+                CreatedDate = "05/05/2025",
                 Comment = "Lorem ipsum dolor sit amet, consectetur adipiscing elit," +
                 " sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 FullName = "Jeki Chan",
@@ -44,6 +46,7 @@ namespace RepositoryLayer.Configuration
             }, new Testimonal
             {
                 Id = 3,
+                CreatedDate = "05/05/2025",
                 Comment = "Lorem ipsum dolor sit amet, consectetur adipiscing elit," +
                 " sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 FullName = "Brusli",

@@ -14,16 +14,19 @@ namespace RepositoryLayer.Configuration
         public void Configure(EntityTypeBuilder<Portfolio> builder)
         {
             builder.Property(x => x.CreatedDate).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.UpdatedDate).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.UpdatedDate).HasMaxLength(10);
             builder.Property(x => x.RowVersion).IsRowVersion();
+
+            //builder.HasOne(x => x.Category).WithMany(x => x.Portfolios).OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(x => x.Title).IsRequired().HasMaxLength(200);
             builder.Property(x => x.FileName).IsRequired();
-            builder.Property(x => x.FileName).IsRequired();
+            builder.Property(x => x.FileType).IsRequired();
 
             builder.HasData(new Portfolio
             {
                 Id = 1,
+                CreatedDate = "05/05/2025",
                 CategoryId = 1,
                 FileName = "Test",
                 FileType = "test",
@@ -31,6 +34,7 @@ namespace RepositoryLayer.Configuration
             }, new Portfolio
             {
                 Id = 2,
+                CreatedDate = "05/05/2025",
                 CategoryId = 1,
                 FileName = "Test2",
                 FileType = "test2",
@@ -38,6 +42,7 @@ namespace RepositoryLayer.Configuration
             }, new Portfolio
             {
                 Id = 3,
+                CreatedDate = "05/05/2025",
                 CategoryId = 2,
                 FileName = "Test3",
                 FileType = "test3",
@@ -45,6 +50,7 @@ namespace RepositoryLayer.Configuration
             }, new Portfolio
             {
                 Id = 4,
+                CreatedDate = "05/05/2025",
                 CategoryId = 2,
                 FileName = "Test4",
                 FileType = "test4",

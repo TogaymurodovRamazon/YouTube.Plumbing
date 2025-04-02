@@ -10,7 +10,7 @@ namespace EntityLayer.WebApplication.Entities
     public class SocialMedia : BaseEntity
     {
         public string? Twitter { get; set; }
-        public string? Linkedin { get; set; }
+        public string? LinkedIn { get; set; }
         public string? Faceboook { get; set; }
         public string? Instagram { get; set; }
 

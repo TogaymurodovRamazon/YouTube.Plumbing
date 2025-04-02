@@ -1,4 +1,5 @@
-﻿using EntityLayer.WebApplication.Entities;
+﻿using CoreLayer.BaseEntities;
+using EntityLayer.WebApplication.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace RepositoryLayer.Context
         public AppDBContext(DbContextOptions contextOptions) : base(contextOptions) 
         {
         }
-        public AppDBContext()
+        protected AppDBContext()
         {
             
         }
@@ -36,6 +37,35 @@ namespace RepositoryLayer.Context
             //modelBuilder.Entity<About>().Property(x => x.Description).IsRequired().HasMaxLength(200);
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+
+            foreach (var item in ChangeTracker.Entries())
+            {
+                if (item.Entity is BaseEntity entity)
+                {
+
+                    switch (item.State)
+                    {
+                        case EntityState.Added:
+                            entity.CreatedDate = DateTime.Now.ToString("d");
+                            break;
+                        case EntityState.Modified:
+                            Entry(entity).Property(x => x.CreatedDate).IsModified = false;
+                            entity.UpdatedDate = DateTime.Now.ToString("d");
+                            break;
+                        default:
+                            break;
+                    }
+
+
+                }
+            }
+
+
+            return base.SaveChangesAsync(cancellationToken);
         }
 
     }

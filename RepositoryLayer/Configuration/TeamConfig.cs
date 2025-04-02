@@ -14,7 +14,7 @@ namespace RepositoryLayer.Configuration
         public void Configure(EntityTypeBuilder<Team> builder)
         {
             builder.Property(x => x.CreatedDate).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.UpdatedDate).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.UpdatedDate).HasMaxLength(10);
             builder.Property(x => x.RowVersion).IsRowVersion();
 
             builder.Property(x => x.FullName).IsRequired().HasMaxLength(100);
@@ -25,6 +25,7 @@ namespace RepositoryLayer.Configuration
             builder.HasData(new Team
             {
                 Id = 1,
+                CreatedDate = "05/05/2025",
                 FullName = "John Black",
                 Title = "Professor",
                 Faceboook="facebook",

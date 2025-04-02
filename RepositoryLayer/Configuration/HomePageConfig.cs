@@ -14,17 +14,18 @@ namespace RepositoryLayer.Configuration
         public void Configure(EntityTypeBuilder<HomePage> builder)
         {
             builder.Property(x => x.CreatedDate).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.UpdatedDate).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.UpdatedDate).HasMaxLength(10);
             builder.Property(x => x.RowVersion).IsRowVersion();
 
             builder.Property(x => x.Header).IsRequired().HasMaxLength(200);
-            builder.Property(x => x.Description).IsRequired().HasMaxLength(200);
+            builder.Property(x => x.Description).IsRequired().HasMaxLength(2000);
             builder.Property(x => x.VideoLink).IsRequired();
 
             builder.HasData(new HomePage
             {
                 Id = 1,
-                Header= "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                CreatedDate = "05/05/2025",
+                Header = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 Description= "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 VideoLink="Test Video Link",

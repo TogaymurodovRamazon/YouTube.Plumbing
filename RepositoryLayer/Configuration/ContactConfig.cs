@@ -14,7 +14,7 @@ namespace RepositoryLayer.Configuration
         public void Configure(EntityTypeBuilder<Contact> builder)
         {
             builder.Property(x => x.CreatedDate).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.UpdatedDate).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.UpdatedDate).HasMaxLength(10);
             builder.Property(x => x.RowVersion).IsRowVersion();
 
             builder.Property(x => x.Location).IsRequired().HasMaxLength(200);
@@ -25,6 +25,7 @@ namespace RepositoryLayer.Configuration
             builder.HasData(new Contact
             {
                 Id = 1,
+                CreatedDate = "05/05/2025",
                 Location = "AQSh Street, Nyu York",
                 Email = "test@gmail.com",
                 Call = "+998904417805",
