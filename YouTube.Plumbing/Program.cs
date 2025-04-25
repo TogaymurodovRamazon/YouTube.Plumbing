@@ -1,4 +1,5 @@
 using RepositoryLayer.Extensions;
+using ServiceLayer.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ builder.Services.AddControllersWithViews();
 
 //---------------------------------------------------------------
 builder.Services.LoadRepositoryLayerExtensions(builder.Configuration);
+builder.Services.LoadServiceLayerExtensions();
 
 //---------------------------------------------------------------
 
