@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ServiceLayer.Services.Abstract;
+using ServiceLayer.Services.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,20 @@ namespace ServiceLayer.Extensions
         public static IServiceCollection LoadServiceLayerExtensions(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            // Service dagi interface va classni har birini yozib chiqmay kod ko'rinishida yozamiz
+            //services.AddScoped<IAboutService, AboutService>();
+            var takror = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(x => x.IsClass && !x.IsAbstract && x.Name.EndsWith("Service"));
+            foreach (var serviceType in takror)
+            {
+                var iServiceType = serviceType.GetInterfaces().FirstOrDefault(x => x.Name == $"I{serviceType.Name}");
+                if(iServiceType != null)
+                {
+                    services.AddScoped(iServiceType, serviceType);
+                }
+            }
+
             return services;
         }
     }
