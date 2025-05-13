@@ -9,7 +9,7 @@
 
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+        <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
                 <li class="breadcrumb-item active">About Us</li>
             </ol>
         </nav>
@@ -110,7 +110,7 @@
                                     <div class="col-lg-9 col-md-8">@item.HardWorkers</div>
                                 </div>
 
-                                <a href="#" class="btn btn-info btn-sm">Edit</a>
+                                <a asp-area="Admin" asp-controller="About" asp-action="UpdateAbout" data-id="@item.Id" asp-route-id="@item.Id" class="btn btn-info btn-sm">Edit</a>
 
                             </div>
                         
