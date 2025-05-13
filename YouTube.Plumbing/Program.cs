@@ -29,6 +29,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+//app.MapControllers();
+
 
 #pragma warning disable ASP0014
 app.UseEndpoints(endpoint =>
