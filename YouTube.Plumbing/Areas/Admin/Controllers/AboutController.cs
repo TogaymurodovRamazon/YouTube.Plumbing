@@ -5,7 +5,7 @@ using ServiceLayer.Services.Abstract;
 namespace YouTube.Plumbing.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Route("Admin/[controller]/[action]")]
+    //[Route("Admin/[controller]/[action]")]
 
     //[Authorize(Policy = "AdminObserver")]
     //[Area("Admin")]
@@ -34,7 +34,7 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         public async Task<IActionResult> AddAbout(AboutAddVM aboutAddVM)
         {
             await _aboutService.AddAboutAsync(aboutAddVM);
-            return RedirectToAction("GetAboutList", "About", new { Area = "Admin" });
+            return RedirectToAction("GetAboutList", "About", new { Area = ("Admin") });
         }
 
         [HttpGet]
@@ -47,13 +47,13 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateAbout(AboutUpdateVM aboutUpdateVM)
         {
             await _aboutService.UpdateAboutAsync(aboutUpdateVM);
-            return RedirectToAction("GetAboutList", "About", new { Area = "Admin" });
+            return RedirectToAction("GetAboutList", "About", new { Area = ("Admin") });
         }
 
         public async Task<IActionResult> DeleteAbout(int id)
         {
             await _aboutService.DeleteAboutAsync(id);
-            return RedirectToAction("GetAboutList", "About", new { Area = "Admin" });
+            return RedirectToAction("GetAboutList", "About", new { Area = ("Admin") });
         }
     }
 }
