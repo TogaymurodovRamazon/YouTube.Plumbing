@@ -1,8 +1,6 @@
-﻿using EntityLayer.WebApplication.ViewModels.CategoryVM;
-using EntityLayer.WebApplication.ViewModels.PortfolioVM;
+﻿using EntityLayer.WebApplication.ViewModels.PortfolioVM;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Services.Abstract;
-using ServiceLayer.Services.Concrete;
 
 namespace YouTube.Plumbing.Areas.Admin.Controllers
 {
