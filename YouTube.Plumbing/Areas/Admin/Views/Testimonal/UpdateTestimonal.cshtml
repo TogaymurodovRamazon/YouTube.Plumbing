@@ -1,51 +1,50 @@
-﻿@model PortfolioUpdateVM
+﻿@model TestimonalUpdateVM
 @{
-    ViewData["Title"] = "UpdatePortfolio";
+    ViewData["Title"] = "UpdateTestimonal";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 <div>
-    <h5 class="card-title">Update Portfolio</h5>
+    <h5 class="card-title">Update Testimonal</h5>
 
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
-            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Portfolio" asp-action="GetPortfolioList">Portfolio</a></li>
+            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Testimonal" asp-action="GetTeamList">Testimonals</a></li>
             <li class="breadcrumb-item active">Update</li>
         </ol>
     </nav>
 </div>
 
-<!-- Card with an image on top -->
-<div class="card">
-    <img src="~/Admin/assets/img/card.jpg" class="card-img-top" alt="...">
-    <div class="card-body">
-        <h5 class="card-title">@Model.Title</h5>
-    </div>
-</div><!-- End Card with an image on top -->
-
-
 <div class="card">
     <div class="card-body">
 
         <!-- Floating Labels Form -->
-        <form asp-area="Admin" asp-controller="Portfolio" asp-action="UpdatePortfolio" method="post" class="row g-3" enctype="multipart/form-data">
+        <form asp-area="Admin" asp-controller="Testimonal" asp-action="UpdateTestimonal" method="post" class="row g-3" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" value="test" />
+            <input type="hidden" asp-for="RowVersion" value="test" />
             <input type="hidden" asp-for="FileName" value="test" />
             <input type="hidden" asp-for="FileType" value="test" />
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="RowVersion" />
-            <div class="col-md-12">
+
+            <div class="col-md-6">
                 <div class="form-floating">
-                    <input asp-for="Title" type="text" class="form-control" placeholder="Header">
-                    <label asp-for="Title">Header</label>
+                    <input asp-for="FullName" type="text" class="form-control" placeholder="FullName">
+                    <label asp-for="FullName">FullName</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input asp-for="Title" type="text" class="form-control" placeholder="Title">
+                    <label asp-for="Title">Title</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="form-floating">
-                    <input asp-for="Category.Name" type="text" class="form-control" placeholder="Category.Name">
-                    <label asp-for="Category.Name">Category.Name</label>
+                    <textarea asp-for="Comment" type="text" class="form-control" style="height:150px" placeholder="Comment"></textarea>
+                    <label asp-for="Comment">Comment</label>
                 </div>
             </div>
+
             <div class="col-md-12">
                 <div class="form-floating">
                     <input asp-for="Photo" accept="image/*" type="file" class="form-control" placeholder="Photo">

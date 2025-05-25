@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,7 @@ namespace EntityLayer.WebApplication.ViewModels.TeamVM
         public string? Linkedin { get; set; }
         public string? Faceboook { get; set; }
         public string? Instagram { get; set; }
+
+        public IFormFile Photo { get; set; } = null!;
     }
 }
