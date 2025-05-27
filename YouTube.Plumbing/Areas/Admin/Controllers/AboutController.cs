@@ -1,6 +1,8 @@
 ﻿using EntityLayer.WebApplication.ViewModels.AboutVM;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.Services.Abstract;
+using ServiceLayer.Services.WebApplication.Abstract;
 
 namespace YouTube.Plumbing.Areas.Admin.Controllers
 {
@@ -12,11 +14,17 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
     public class AboutController : Controller
     {
         private readonly IAboutService _aboutService;
+        private readonly IValidator<AboutAddVM> _addValidator;
+        private readonly IValidator<AboutUpdateVM> _updateValidator;
 
-        public AboutController(IAboutService aboutService)
+        public AboutController(IAboutService aboutService, IValidator<AboutAddVM> addValidator, IValidator<AboutUpdateVM> updateValidator)
         {
             _aboutService = aboutService;
+            _addValidator = addValidator;
+            _updateValidator = updateValidator;
         }
+
+
 
         public async Task<IActionResult> GetAboutList()
         {
@@ -33,8 +41,15 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAbout(AboutAddVM aboutAddVM)
         {
-            await _aboutService.AddAboutAsync(aboutAddVM);
-            return RedirectToAction("GetAboutList", "About", new { Area = ("Admin") });
+            var validation = await _addValidator.ValidateAsync(aboutAddVM);
+            if (validation.IsValid)
+            {
+                await _aboutService.AddAboutAsync(aboutAddVM);
+                return RedirectToAction("GetAboutList", "About", new { Area = ("Admin") });
+            }
+            validation.AddToModelState(this.ModelState);
+            return View();
+            
         }
 
         [HttpGet]
@@ -46,8 +61,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateAbout(AboutUpdateVM aboutUpdateVM)
         {
-            await _aboutService.UpdateAboutAsync(aboutUpdateVM);
-            return RedirectToAction("GetAboutList", "About", new { Area = ("Admin") });
+            var validation = await _updateValidator.ValidateAsync(aboutUpdateVM);
+            if (validation.IsValid)
+            {
+                await _aboutService.UpdateAboutAsync(aboutUpdateVM);
+                return RedirectToAction("GetAboutList", "About", new { Area = ("Admin") });
+            }
+            validation.AddToModelState(this.ModelState);
+            return View();            
         }
 
         public async Task<IActionResult> DeleteAbout(int id)

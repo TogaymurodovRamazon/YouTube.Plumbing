@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ServiceLayer.Services.Abstract;
-using ServiceLayer.Services.Concrete;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+using ServiceLayer.FluentValidation.WebApplication.HomePageValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,18 +17,24 @@ namespace ServiceLayer.Extensions
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            // Service dagi interface va classni har birini yozib chiqmay kod ko'rinishida yozamiz
+            // Service dagi interface va classni har birini yozib chiqmay generic ko'rinishida yozamiz
             //services.AddScoped<IAboutService, AboutService>();
             var takror = Assembly.GetExecutingAssembly().GetTypes()
                 .Where(x => x.IsClass && !x.IsAbstract && x.Name.EndsWith("Service"));
             foreach (var serviceType in takror)
             {
                 var iServiceType = serviceType.GetInterfaces().FirstOrDefault(x => x.Name == $"I{serviceType.Name}");
-                if(iServiceType != null)
+                if (iServiceType != null)
                 {
                     services.AddScoped(iServiceType, serviceType);
                 }
             }
+
+            services.AddFluentValidationAutoValidation(opt=>
+            {
+                opt.DisableDataAnnotationsValidation = true;
+            });
+            services.AddValidatorsFromAssemblyContaining<HomePageAddValidation>();
 
             return services;
         }

@@ -1,6 +1,8 @@
 ﻿using EntityLayer.WebApplication.ViewModels.CategoryVM;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.Services.Abstract;
+using ServiceLayer.Services.WebApplication.Abstract;
 
 namespace YouTube.Plumbing.Areas.Admin.Controllers
 {
@@ -8,10 +10,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
+        private readonly IValidator<CategoryAddVM> _addValidator;
+        private readonly IValidator<CategoryUpdateVM> _updateValidator;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IValidator<CategoryAddVM> addValidator, IValidator<CategoryUpdateVM> updateValidator)
         {
             _categoryService = categoryService;
+            _addValidator = addValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IActionResult> GetCategoryList()
@@ -29,8 +35,15 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory(CategoryAddVM categoryAddVM)
         {
-            await _categoryService.AddCategoryAsync(categoryAddVM);
-            return RedirectToAction("GetCategoryList", "Category", new { Area = ("Admin") });
+            var validator = await _addValidator.ValidateAsync(categoryAddVM);
+            if (validator.IsValid)
+            {
+                await _categoryService.AddCategoryAsync(categoryAddVM);
+                return RedirectToAction("GetCategoryList", "Category", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
+           
         }
 
         [HttpGet]
@@ -42,8 +55,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCategory(CategoryUpdateVM categoryUpdateVM)
         {
-            await _categoryService.UpdateCategoryAsync(categoryUpdateVM);
-            return RedirectToAction("GetCategoryList", "Category", new { Area = ("Admin") });
+            var validator = await _updateValidator.ValidateAsync(categoryUpdateVM);
+            if(validator.IsValid)
+            {
+                await _categoryService.UpdateCategoryAsync(categoryUpdateVM);
+                return RedirectToAction("GetCategoryList", "Category", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
         }
 
         public async Task<IActionResult> DeleteCategory(int id)
