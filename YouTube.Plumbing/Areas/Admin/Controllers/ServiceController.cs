@@ -1,4 +1,6 @@
 ﻿using EntityLayer.WebApplication.ViewModels.ServiceVM;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Services.WebApplication.Abstract;
 
@@ -8,10 +10,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
     public class ServiceController : Controller
     {
         private readonly IServiceService _serviceService;
+        private readonly IValidator<ServiceAddVM> _addValidator;
+        private readonly IValidator<ServiceUpdateVM> _updateValidator;
 
-        public ServiceController(IServiceService serviceService)
+        public ServiceController(IServiceService serviceService, IValidator<ServiceAddVM> addValidator, IValidator<ServiceUpdateVM> updateValidator)
         {
             _serviceService = serviceService;
+            _addValidator = addValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IActionResult> GetServiceList()
@@ -29,8 +35,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddService(ServiceAddVM serviceAddVM)
         {
-            await _serviceService.AddServiceAsync(serviceAddVM);
-            return RedirectToAction("GetServiceList", "Service", new { Area = ("Admin") });
+            var validator= await _addValidator.ValidateAsync(serviceAddVM);
+            if (validator.IsValid)
+            {
+                await _serviceService.AddServiceAsync(serviceAddVM);
+                return RedirectToAction("GetServiceList", "Service", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
         }
 
         [HttpGet]
@@ -42,8 +54,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateService(ServiceUpdateVM serviceUpdateVM)
         {
-            await _serviceService.UpdateServiceAsync(serviceUpdateVM);
-            return RedirectToAction("GetServiceList", "Service", new { Area = ("Admin") });
+            var validator = await _updateValidator.ValidateAsync(serviceUpdateVM);
+            if(validator.IsValid)
+            {
+                await _serviceService.UpdateServiceAsync(serviceUpdateVM);
+                return RedirectToAction("GetServiceList", "Service", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
         }
 
         public async Task<IActionResult> DeleteService(int id)

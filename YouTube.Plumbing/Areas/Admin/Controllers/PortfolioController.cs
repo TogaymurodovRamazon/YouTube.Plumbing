@@ -1,4 +1,6 @@
 ﻿using EntityLayer.WebApplication.ViewModels.PortfolioVM;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Services.WebApplication.Abstract;
 
@@ -7,11 +9,15 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
     [Area("Admin")]
     public class PortfolioController : Controller
     {
-       private readonly IPortfolioService _portfolioService;
+        private readonly IPortfolioService _portfolioService;
+        private readonly IValidator<PortfolioAddVM> _addValidator;
+        private readonly IValidator<PortfolioUpdateVM> _updateValidator;
 
-        public PortfolioController(IPortfolioService portfolioService)
+        public PortfolioController(IPortfolioService portfolioService, IValidator<PortfolioAddVM> addValidator, IValidator<PortfolioUpdateVM> updateValidator)
         {
             _portfolioService = portfolioService;
+            _addValidator = addValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IActionResult> GetPortfolioList()
@@ -29,8 +35,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPortfolio(PortfolioAddVM portfolioAddVM)
         {
-            await _portfolioService.AddPortfolioAsync(portfolioAddVM);
-            return RedirectToAction("GetPortfolioList", "Portfolio", new { Area = ("Admin") });
+            var validator = await _addValidator.ValidateAsync(portfolioAddVM);
+            if (validator.IsValid)
+            {
+                await _portfolioService.AddPortfolioAsync(portfolioAddVM);
+                return RedirectToAction("GetPortfolioList", "Portfolio", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
         }
 
         [HttpGet]
@@ -42,8 +54,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdatePortfolio(PortfolioUpdateVM portfolioUpdateVM)
         {
-            await _portfolioService.UpdatePortfolioAsync(portfolioUpdateVM);
-            return RedirectToAction("GetPortfolioList", "Portfolio", new { Area = ("Admin") });
+            var validator = await _updateValidator.ValidateAsync(portfolioUpdateVM);
+            if(validator.IsValid)
+            {
+                await _portfolioService.UpdatePortfolioAsync(portfolioUpdateVM);
+                return RedirectToAction("GetPortfolioList", "Portfolio", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
         }
 
         public async Task<IActionResult> DeletePortfolio(int id)

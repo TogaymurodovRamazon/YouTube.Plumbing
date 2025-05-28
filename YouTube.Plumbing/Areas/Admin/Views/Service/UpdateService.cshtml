@@ -23,22 +23,32 @@
         <form asp-area="Admin" asp-controller="Service" asp-action="UpdateService" method="post" class="row g-3">
             <input type="hidden" asp-for="Id" value="test"/>
             <input type="hidden" asp-for="RowVersion" value="test"/>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="col-md-12">
                 <div class="form-floating">
                     <input asp-for="Name" type="text" class="form-control" placeholder="Name">
                     <label asp-for="Name">Name</label>
+
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="form-floating">
                     <input asp-for="Description" type="text" class="form-control" placeholder="Description">
                     <label asp-for="Description">Description</label>
+
+                    <span asp-validation-for="Description" class="text-danger"></span>
+
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="form-floating">
                     <input asp-for="Icon" type="text" class="form-control" placeholder="Icon">
                     <label asp-for="Icon">Icon</label>
+
+                    <span asp-validation-for="Icon" class="text-danger"></span>
+
                 </div>
             </div>
 

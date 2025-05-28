@@ -1,4 +1,6 @@
 ﻿using EntityLayer.WebApplication.ViewModels.ContactVM;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Services.WebApplication.Abstract;
 
@@ -7,11 +9,15 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
     [Area("Admin")]
     public class ContactController : Controller
     {
-       private readonly IContactService _contactService;
+        private readonly IContactService _contactService;
+        private readonly IValidator<ContactAddVM> _addValidator;
+        private readonly IValidator<ContactUpdateVM> _updateValidator;
 
-        public ContactController(IContactService contactService)
+        public ContactController(IContactService contactService, IValidator<ContactAddVM> addValidator, IValidator<ContactUpdateVM> updateValidator)
         {
             _contactService = contactService;
+            _addValidator = addValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IActionResult> GetContactList()
@@ -29,8 +35,15 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddContact(ContactAddVM contactAddVM)
         {
-            await _contactService.AddContactAsync(contactAddVM);
-            return RedirectToAction("GetContactList", "Contact", new { Area = ("Admin") });
+            var validator = await _addValidator.ValidateAsync(contactAddVM);
+            if (validator.IsValid)
+            {
+                await _contactService.AddContactAsync(contactAddVM);
+                return RedirectToAction("GetContactList", "Contact", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
+            
         }
 
         [HttpGet]
@@ -42,8 +55,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateContact(ContactUpdateVM contactUpdateVM)
         {
-            await _contactService.UpdateContactAsync(contactUpdateVM);
-            return RedirectToAction("GetContactList", "Contact", new { Area = ("Admin") });
+            var validator = await _updateValidator.ValidateAsync(contactUpdateVM);
+            if (validator.IsValid)
+            {
+                await _contactService.UpdateContactAsync(contactUpdateVM);
+                return RedirectToAction("GetContactList", "Contact", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
         }
 
         public async Task<IActionResult> DeleteContact(int id)

@@ -1,4 +1,6 @@
 ﻿using EntityLayer.WebApplication.ViewModels.HomePageVM;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Services.WebApplication.Abstract;
 
@@ -8,9 +10,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
     public class HomePageController : Controller
     {
         private readonly IHomePageService _homePageService;
-        public HomePageController(IHomePageService homePageService)
+        private readonly IValidator<HomePageAddVM> _addValidator;
+        private readonly IValidator<HomePageUpdateVM> _updateValidator;
+
+        public HomePageController(IHomePageService homePageService, IValidator<HomePageAddVM> addValidator, IValidator<HomePageUpdateVM> updateValidator)
         {
             _homePageService = homePageService;
+            _addValidator = addValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IActionResult> GetHomePageList()
@@ -28,8 +35,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddHomePage(HomePageAddVM homePageAddVM)
         {
-            await _homePageService.AddHomePageAsync(homePageAddVM);
-            return RedirectToAction("GetHomePageList", "HomePage", new { Area = ("Admin") });
+            var validator = await _addValidator.ValidateAsync(homePageAddVM);
+            if (validator.IsValid)
+            {
+                await _homePageService.AddHomePageAsync(homePageAddVM);
+                return RedirectToAction("GetHomePageList", "HomePage", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
         }
 
         [HttpGet]
@@ -41,8 +54,14 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateHomePage(HomePageUpdateVM homePageUpdateVM)
         {
-            await _homePageService.UpdateHomePageAsync(homePageUpdateVM);
-            return RedirectToAction("GetHomePageList", "HomePage", new { Area = ("Admin") });
+            var validator = await _updateValidator.ValidateAsync(homePageUpdateVM);
+            if(!validator.IsValid)
+            {
+                await _homePageService.UpdateHomePageAsync(homePageUpdateVM);
+                return RedirectToAction("GetHomePageList", "HomePage", new { Area = ("Admin") });
+            }
+            validator.AddToModelState(this.ModelState);
+            return View();
         }
 
         public async Task<IActionResult> DeleteHomePage(int id)
