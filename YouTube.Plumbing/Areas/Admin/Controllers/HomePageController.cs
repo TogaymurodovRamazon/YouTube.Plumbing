@@ -2,7 +2,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.Services.WebApplication.Abstract;
+using YouTube.Plumbing.ServiceLayer.Services.WebApplication.Abstract;
 
 namespace YouTube.Plumbing.Areas.Admin.Controllers
 {

@@ -2,7 +2,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.Services.WebApplication.Abstract;
+using YouTube.Plumbing.ServiceLayer.Services.WebApplication.Abstract;
 
 namespace YouTube.Plumbing.Areas.Admin.Controllers
 {
@@ -19,7 +19,7 @@ namespace YouTube.Plumbing.Areas.Admin.Controllers
 
         public AboutController(IAboutService aboutService, IValidator<AboutAddVM> addValidator, IValidator<AboutUpdateVM> updateValidator)
         {
-            _aboutService = aboutService;
+           _aboutService = aboutService;
             _addValidator = addValidator;
             _updateValidator = updateValidator;
         }

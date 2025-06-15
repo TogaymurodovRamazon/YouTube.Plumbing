@@ -23,6 +23,8 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\Home\" />
+    <Folder Include="Services\Identity\Abstract\" />
+    <Folder Include="Services\Identity\Concrete\" />
   </ItemGroup>
 
 </Project>

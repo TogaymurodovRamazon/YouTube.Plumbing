@@ -15,6 +15,6 @@ namespace RepositoryLayer.Repositories.Abstract
         void DeleteEntity(T entity);
         IQueryable<T> GetAllEntityList();
         IQueryable<T> Where(Expression<Func<T, bool>> exception);
-        Task<T> GetEntityByIdAsync(int id);
+        Task<T?> GetEntityByIdAsync(int id);
     }
 }

@@ -42,7 +42,7 @@ namespace RepositoryLayer.Repositories.Concrete
         {
             return _dbSet.Where(exception);
         }
-        public async Task<T> GetEntityByIdAsync(int id)
+        public async Task<T?> GetEntityByIdAsync(int id)
         {
            return await _dbSet.FindAsync(id);
         }

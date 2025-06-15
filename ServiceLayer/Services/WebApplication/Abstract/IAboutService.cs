@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceLayer.Services.WebApplication.Abstract
+namespace YouTube.Plumbing.ServiceLayer.Services.WebApplication.Abstract
 {
     public interface IAboutService
     {

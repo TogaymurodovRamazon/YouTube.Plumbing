@@ -6,14 +6,14 @@ using EntityLayer.WebApplication.ViewModels.SocialMediaVM;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer.Repositories.Abstract;
 using RepositoryLayer.UnitOfWorks.Abstract;
-using ServiceLayer.Services.WebApplication.Abstract;
+using YouTube.Plumbing.ServiceLayer.Services.WebApplication.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceLayer.Services.WebApplication.Concrete
+namespace YouTube.Plumbing.ServiceLayer.Services.WebApplication.Concrete
 {
     public class SocialMediaService : ISocialMediaService
     {
