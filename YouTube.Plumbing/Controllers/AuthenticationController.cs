@@ -5,7 +5,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.Helpers.Identity;
+using NuGet.Common;
+using ServiceLayer.Helpers.Identity.ModelStateHelper;
 
 namespace YouTube.Plumbing.Controllers
 {
@@ -17,6 +18,8 @@ namespace YouTube.Plumbing.Controllers
 
         private readonly IValidator<LogInVM> _logInValidator;
         private readonly SignInManager<AppUser> _signInManager;
+
+        private readonly IValidator<ForgotPasswordVM> _forgotPasswordValidator;
 
         public AuthenticationController(UserManager<AppUser> userManager, IValidator<SignUpVM> signUpValidator, IMapper mapper, IValidator<LogInVM> logInValidator, SignInManager<AppUser> signInManager)
         {
@@ -95,6 +98,34 @@ namespace YouTube.Plumbing.Controllers
             ViewBag.Result = "FailedAttempt";
             ModelState.AddModelErrorList(new List<string> { $"Email or Password is wrong! Failed attempt{await _userManager.GetAccessFailedCountAsync(hasUser)}"});
             return View();
-        } 
+        }
+
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVM request)
+        {
+            var validator = await _forgotPasswordValidator.ValidateAsync(request);
+            if (!validator.IsValid)
+            {
+                validator.AddToModelState(this.ModelState);
+                return View();
+            }
+
+            var hasUser = await _userManager.FindByEmailAsync(request.Email);
+            if(hasUser == null)
+            {
+                ViewBag.Result = "UserDoesNotExist";
+                ModelState.AddModelErrorList(new List<string> { "User does not exist!" });
+                return View();
+            }
+
+            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(hasUser);
+            var passwordResetLink = Url.Action("ResetPassword", "Authentication", new { UserId = hasUser.Id, Token = resetToken, HttpContext.Request.Scheme });
+        }
     }
 }

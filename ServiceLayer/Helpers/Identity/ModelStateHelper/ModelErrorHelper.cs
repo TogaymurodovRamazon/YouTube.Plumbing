@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceLayer.Helpers.Identity
+namespace ServiceLayer.Helpers.Identity.ModelStateHelper
 {
     public static class ModelErrorHelper
     {
